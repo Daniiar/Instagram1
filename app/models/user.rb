@@ -12,4 +12,6 @@ class User < ApplicationRecord
 		validates_attachment_content_type :image,
 			content_type: ['image/jpeg', 'image/gif', 'image/png']
 
+	has_many :photographies
+
 end
