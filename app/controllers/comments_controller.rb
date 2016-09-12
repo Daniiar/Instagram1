@@ -1,5 +1,6 @@
 class CommentsController < ApplicationController
 
+
   before_action :set_comment, only: [:edit, :update, :destroy]
 
   before_action :no_actions, only: [:edit, :update, :destroy]
@@ -52,5 +53,6 @@ class CommentsController < ApplicationController
         end
     end
   end
+
 
 end
