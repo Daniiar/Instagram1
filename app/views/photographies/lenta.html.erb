@@ -1,0 +1,77 @@
+<% if user_signed_in? %>
+
+	<div class="columns left-col">
+		<%= image_tag current_user.avatar.url(:thumb) %>
+		<h6><%= current_user.name %></h6>
+		<h6><%= current_user.email %></h6>
+		<h1>My lenta</h1>
+		<h1><%= link_to 'add photo', new_photography_path %></h1>
+		<section>
+			<%= render 'shared/stats' %>
+		</section>
+	</div>
+
+	<div class="columns middle-col">
+		<h1>Lenta</h1>
+		<% @photographies.each do |photography| %>
+			<% if current_user.following?(photography.user) %>
+				<%= image_tag photography.user.avatar.url(:thumb) %>
+				<h5>Author:<%= photography.user.name %></h5>
+				<h5>Photo title:<%= photography.name %></h5>
+				<%= image_tag photography.image.url(:thumb) %>
+				<%= photography.get_likes.size%>
+				<% if photography.get_likes.size == 1 %>
+				    person like this
+				<% else %>
+				   people like this
+				<% end %>
+
+				<div class="btn-group">
+					<% if (current_user.liked? photography) %>
+						<%= link_to unlike_photography_path(photography), method: :put, class: "btn btn-default btn-sm" do %>
+						    <span class="glyphicon glyphicon-chevron-down"></span>
+						    Unlike
+						<%end %>
+					<% else %>
+					    <%= link_to like_photography_path(photography), method: :put, class: "btn btn-primary btn-sm" do %>
+						    <span class="glyphicon glyphicon-chevron-up"></span>
+						    Like
+					    <% end %>
+					<% end %>
+				</div>
+
+				<h3>Comments:</h3>
+				<% counter = 1 %>
+				<% photography.comments.order(created_at: :desc).each do |comment| %>
+					<%= comment.title %>>>>>
+					<%= comment.user.name%></br>
+					<% counter += 1 %>
+					<% if counter == 3 %>
+						<% break %>
+					<% end %>
+				<% end %>
+		        <p>...</p>
+		        <%= link_to 'See comments', photography_path(photography), class: 'btn btn-primary' %>
+				<h1>-------------------------------------------------</h1>
+			<% end %>
+		<% end %>
+	</div>
+
+	<div class="columns right-col">
+		<% @users.each do |user| %>
+			<% unless current_user == user %>
+			<%= image_tag user.avatar.url(:thumb) %>
+				<h6><%= user.name %></h6>
+		
+				<div id="follow form">
+					<% if current_user.following?(user) %>
+						<%= render 'shared/unfollow', user: user.id %>
+					<% else %>
+						<%= render 'shared/follow', user: user.id %>
+					<% end %>
+					</br>
+				</div>
+			<% end %>
+		<% end %>
+	</div>
+<% end %>

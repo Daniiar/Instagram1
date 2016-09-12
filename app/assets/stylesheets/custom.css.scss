@@ -1,0 +1,42 @@
+/* sidebar */
+.stats {
+  overflow: auto;
+  a {
+    float: left;
+    padding: 0 10px;
+    border-left: 1px solid grayLighter;
+    color: red;
+    &:first-child {
+      padding-left: 0;
+      border: 0;
+    }
+    &:hover {
+      text-decoration: none;
+      color: blue;
+    }
+  }
+  strong {
+    display: block;
+  }
+}
+
+.columns{ 
+    float: left;
+    margin: 0 10px;
+}
+.container {  
+    width: 100% !important;
+}
+.left-col, .right-col{
+  width:20%;
+}
+.middle-col{
+  width:55%;
+}
+html, body{
+  width:100%;
+  height:100%;
+}
+body{
+    background-color:#e9ebee;
+}

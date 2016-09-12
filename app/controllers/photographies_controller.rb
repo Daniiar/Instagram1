@@ -1,6 +1,13 @@
 class PhotographiesController < ApplicationController
+
+  before_filter :authenticate_user!, except: [:index]
+
   def index
-  	@photographies = Photography.all
+    if user_signed_in?
+      @photographies = current_user.photographies
+    else
+      @users = User.all
+    end
   end
 
   def new
@@ -9,11 +16,6 @@ class PhotographiesController < ApplicationController
 
   def create
   	@photography = Photography.new(photography_params)
-  	image = params[:photography][:image]
-  	unless image.nil?
-      @photography.picture = params[:photography][:picture].original_filename
-      upload_picture
-    end
   	if @photography.save
   		redirect_to photographies_path
   	else
@@ -23,6 +25,8 @@ class PhotographiesController < ApplicationController
 
   def show
   	@photography = Photography.find(params[:id])
+    @comment = Comment.new
+    @comments = Comment.all
   end
 
   def destroy
@@ -32,34 +36,41 @@ class PhotographiesController < ApplicationController
     redirect_to photographies_path
   end
 
-  def edit
-  	@photography = Photography.find(params[:id])
+  def lenta
+    @users = User.all
+    @photographies = Photography.all
   end
 
-  def update
-  	@photography = Photography.find(params[:id])
-  	if @photography.update(photography_params)
-		redirect_to photographies_path
-  	else
-  		render 'edit'
-  	end
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers
+    render 'show_follow'
+  end
+
+  def like
+    @photography = Photography.find(params[:id])
+    @photography.liked_by current_user
+    redirect_to :back
+  end
+
+  def unlike
+    @photography = Photography.find(params[:id])
+    @photography.unliked_by current_user
+    redirect_to :back
   end
 
   private
 
   def photography_params
-  	params.require(:photography).permit(:name, :image)
+  	params.require(:photography).permit(:name, :image, :user_id)
   end
 
-  def upload_picture
-    uploaded_file = params[:photography][:image]
-	unless uploaded_file.nil?
-		new_file_path = Rails.root.join('public', 'uploads', 'photographies', uploaded_file.original_filename)
-
-		File.open(new_file_path, "wb") do |file|
-		  file.write uploaded_file.read
-		end
-	end
-  end
-  
 end

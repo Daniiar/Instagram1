@@ -1,0 +1,46 @@
+<div class="container">
+	<%= image_tag current_user.avatar.url(:thumb) %>
+	<h1>User: <%= current_user.name %></h1>
+	<h6><%= current_user.email %></h6>
+	<p>------------------------------------------------------------------------------------------------</p>
+	<h5>Photo title:<%= @photography.name %></h5>
+	<h2><%= image_tag @photography.image.url(:medium) %></h2>
+	<h5>Author:<%= @photography.user.name %></h5>
+	<%= image_tag @photography.user.avatar.url(:thumb) %>
+	<p>------------------------------------------------------------------------------------------------</p>
+
+	<h3>Comments:</h3>
+
+	<% @photography.comments.order(created_at: :desc).each do |comment| %>		
+		<%= comment.title %>>>>>>
+		<%= comment.user.name %>>>>>>
+		<% if @photography.user == current_user %>
+			<% if comment.user == current_user %>
+	        	<%= link_to 'edit', edit_comment_path(comment) %>
+	        <% end %>     
+        	<%= link_to 'delete', comment_path(comment), method: :delete, data: {confirm: 'Вы дествительно хотите удалить?'} %>
+        <% elsif comment.user == current_user %>
+		    <%= link_to 'edit', edit_comment_path(comment) %>     
+		    <%= link_to 'delete', comment_path(comment), method: :delete, data: {confirm: 'Вы дествительно хотите удалить?'} %>
+	    <% end %>
+	    </br>	
+	<% end %>
+
+	<div class="container">
+		<%= form_for @comment do |f| %>
+
+			<p>
+				<%= f.label 'comment' %>
+				<%= f.text_area :title %>
+			</p>
+
+			<%= f.hidden_field :user_id, :value => current_user.id %>
+			<%= f.hidden_field :photography_id, :value => @photography.id %>
+
+			<p>
+				<%= f.submit 'сохранить' %>
+			</p>
+
+		<% end %>
+	</div>
+</div>

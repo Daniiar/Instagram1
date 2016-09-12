@@ -1,2 +1,30 @@
-<h1>Photographies#new</h1>
-<p>Find me in app/views/photographies/new.html.erb</p>
+<div class="container">
+	<%= form_for @photography do |f| %>
+		<% if @photography.errors.any? %>
+			<div class="errors">
+				Total errors: <%= @photography.errors.count %>
+				<ul>
+					<%= @photography.errors.full_messages.each do |message| %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>	
+
+		<p>
+			<%= f.label 'Имя' %><br/>
+			<%= f.text_field :name %>
+		</p>
+
+		<p>
+			<%= f.label 'Изображение фотографа' %><br />
+			<%= f.file_field :image %>
+		</p>
+
+		<%= f.hidden_field :user_id, :value => current_user.id %>
+
+		<p>
+			<%= f.submit 'save' %>
+		</p>
+	<% end %>
+</div>

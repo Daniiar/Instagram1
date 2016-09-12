@@ -1,18 +1,20 @@
 Rails.application.routes.draw do
-  # get 'photographies/new'
 
-  # get 'photographies/create'
+  root 'photographies#index'
 
-  # get 'comments/new'
+  resources :comments
 
-  # get 'comments/create'
+  resources :photographies do
+	  member do
+	    put 'like', to: "photographies#like"
+	    put 'unlike', to: "photographies#unlike"
+	  end
+  end
 
-  # get 'comments/index'
-
-  root 'comments#welcom'
-
-  resources :comments, :photographies
+  get '/lenta' => 'photographies#lenta', as: :photography_lenta
 
   devise_for :users
+
+  resources :relationships, only: [:create, :destroy]
 
 end

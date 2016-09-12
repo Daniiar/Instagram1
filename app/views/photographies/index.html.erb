@@ -1,0 +1,69 @@
+<% if user_signed_in? %>
+	<%= image_tag current_user.avatar.url(:medium) %>
+	<h6>User:<%= current_user.name %></h6>
+	<h6>email:<%= current_user.email %></h6>
+	<h1>My photographies</h1>
+	<h1><%= link_to 'add photo', new_photography_path %></h1>
+
+	<% @photographies.each do |photography| %>
+		<div class="row-1">
+		  <div class="col-sm-6 col-md-4">
+		    <div class="thumbnail">
+		      <h5>Photo title:<img data-src="holder.js/300x200" alt="<%= photography.name %>"></h5>
+		      <div class="caption">
+				<%= image_tag photography.image.url(:thumb) %>
+				<%= photography.get_likes.size%>
+
+				<% if photography.get_likes.size == 1 %>
+				    person like this
+				<% else %>
+				   	people like this
+				<% end %>
+
+				<div class="btn-group">
+
+					<% if (current_user.liked? photography) %>
+					    <%= link_to unlike_photography_path(photography), method: :put, class: "btn btn-default btn-sm" do %>
+						    <span class="glyphicon glyphicon-chevron-down"></span>
+						      Unlike
+					    <%end %>
+					<% else %>
+					    <%= link_to like_photography_path(photography), method: :put, class: "btn btn-primary btn-sm" do %>
+						    <span class="glyphicon glyphicon-chevron-up"></span>
+						      Like
+					    <% end %>
+					<% end %>
+				</div>
+
+				<h2>Author:<%= photography.user.name %></h2>
+				<h>Comments:</h>
+				<% counter = 1 %>
+
+				<% photography.comments.order(created_at: :desc).each do |comment| %>
+					<%= comment.title %>>>>>
+					<%= comment.user.name%></br>
+					<% counter += 1 %>
+					<% if counter == 3 %>
+						<% break %>
+					<% end %>
+				<% end %>
+
+		        <p>...</p>
+		        <p>
+			        <%= link_to 'delete foto', photography_path(photography), method: :delete, data: {confirm: 'Вы дествительно хотите удалить?'}, class: 'btn btn-primary' %> 
+			        <%= link_to 'see comments', photography_path(photography), class: 'btn btn-primary' %>
+		        </p>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	<% end %>
+		
+<% else %>
+	
+	<h1>Welcom to the Instagram</h1>
+	<% @users.each do |user| %>	
+		<%= user.name %></br>
+	<% end %>
+
+<% end %>       
