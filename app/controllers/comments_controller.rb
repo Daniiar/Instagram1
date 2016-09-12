@@ -1,6 +1,5 @@
 class CommentsController < ApplicationController
 
-
   before_action :set_comment, only: [:edit, :update, :destroy]
 
   before_action :no_actions, only: [:edit, :update, :destroy]
@@ -21,11 +20,9 @@ class CommentsController < ApplicationController
   end
 
   def edit
-  	# @comment = Comment.find(params[:id])
   end
 
   def update
-  	# @comment = Comment.find(params[:id])
   	if @comment.update(comment_params) 
 
 		  redirect_to photography_path(@comment.photography.id)
@@ -53,6 +50,5 @@ class CommentsController < ApplicationController
         end
     end
   end
-
 
 end
